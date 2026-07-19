@@ -1,22 +1,24 @@
-package getstatus
+package guess
 
 import (
 	"httpgordle/internal/api"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func TestHandler(t *testing.T) {
-	req, err := http.NewRequest(http.MethodGet, "/games", nil)
+func TestHandle(t *testing.T) {
+	req, err := http.NewRequest(http.MethodPost, "/games/", strings.NewReader(`{"guess":"pocket"}`))
 	require.NoError(t, err)
 
 	req.SetPathValue(api.GameID, "123456")
 
 	recorder := httptest.NewRecorder()
+
 	Handle(recorder, req)
 
 	assert.Equal(t, http.StatusOK, recorder.Code)

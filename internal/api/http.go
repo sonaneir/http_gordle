@@ -9,7 +9,14 @@ const (
 	// GetStatusRoute is the path to get the status
 	// of a game identified by its id.
 	GetStatusRoute = "games/{" + GameID + "}"
+	// GuessRoute is the path to play a guess in a game, identified by its id.
+	GuessRoute = "guess/{" + GameID + "}"
 )
+
+// GuessRequest is the structure of the message used when submitting a guess.
+type GuessRequest struct {
+	Guess string `json:"guess"`
+}
 
 // GameResponse contains the information about a game.
 type GameResponse struct {
