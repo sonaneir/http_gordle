@@ -1,9 +1,12 @@
 package main
 
-import "net/http"
+import (
+	"httpgordle/internal/handlers"
+	"net/http"
+)
 
 func main() {
-	err := http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", handlers.Mux())
 	if err != nil {
 		panic(err)
 	}
