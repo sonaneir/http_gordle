@@ -2,9 +2,11 @@ package guess
 
 import (
 	"encoding/json"
-	"httpgordle/internal/api"
 	"log"
 	"net/http"
+
+	"httpgordle/internal/api"
+	"httpgordle/internal/session"
 )
 
 // Handle is the handler for the guess endpoint.
@@ -22,13 +24,19 @@ func Handle(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	apiGame := api.GameResponse{
-		ID: id,
-	}
+	game := guess(id, r)
+
+	apiGame := api.ToGameResponse(game)
 
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(apiGame)
 	if err != nil {
 		log.Printf("failed to write response: %s", err)
+	}
+}
+
+func guess(id string, r api.GuessRequest) session.Game {
+	return session.Game{
+		ID: session.GameID(id),
 	}
 }
