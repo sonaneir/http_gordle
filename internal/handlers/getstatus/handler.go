@@ -9,25 +9,27 @@ import (
 	"httpgordle/internal/session"
 )
 
-// Handle is the handler for the status retrieval endpoint.
-func Handle(w http.ResponseWriter, req *http.Request) {
-	id := req.PathValue(api.GameID)
-	if id == "" {
-		http.Error(w, "missing the id of the game", http.StatusBadRequest)
-		return
+// Handler returns the handler for the status retrieval endpoint.
+// The repo parameter will be more clearly defined in the next section.
+func Handler(repo interface{}) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		id := req.PathValue(api.GameID)
+		if id == "" {
+			http.Error(w, "missing the id of the game", http.StatusBadRequest)
+			return
+		}
+
+		game := getGame(id)
+
+		apiGame := api.ToGameResponse(game)
+
+		w.Header().Set("Content-Type", "application/json")
+		err := json.NewEncoder(w).Encode(apiGame)
+		if err != nil {
+			// The header has already been set. Nothing much we can do here.
+			log.Printf("failed to write response: %s", err)
+		}
 	}
-	log.Printf("retrive status of game with id: %v", id)
-
-	game := getGame(id)
-
-	apiGame := api.ToGameResponse(game)
-
-	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(apiGame)
-	if err != nil {
-		log.Printf("failed to write response: %s", err)
-	}
-
 }
 
 func getGame(id string) session.Game {

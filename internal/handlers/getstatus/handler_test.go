@@ -12,6 +12,8 @@ import (
 )
 
 func TestHandle(t *testing.T) {
+	handle := Handler(nil)
+
 	req, err := http.NewRequest(http.MethodPost, "/games/", nil)
 	require.NoError(t, err)
 
@@ -20,7 +22,7 @@ func TestHandle(t *testing.T) {
 
 	recorder := httptest.NewRecorder()
 
-	Handle(recorder, req)
+	handle(recorder, req)
 
 	assert.Equal(t, http.StatusOK, recorder.Code)
 	assert.Equal(t, "application/json", recorder.Header().Get("Content-Type"))

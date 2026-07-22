@@ -5,7 +5,7 @@ const (
 	GameID = "id"
 
 	// NewGameRoute is the path to create a new game.
-	NewGameRoutes = "/games"
+	NewGameRoute = "/games"
 	// GetStatusRoute is the path to get the status
 	// of a game identified by its id.
 	GetStatusRoute = "games/{" + GameID + "}"

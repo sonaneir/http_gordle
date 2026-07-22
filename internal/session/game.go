@@ -1,17 +1,27 @@
 package session
 
-import "errors"
+import "httpgordle/internal/gordle"
+
+// A GameID represents the ID of a game
+type GameID string
 
 // Game contains the information about a game.
 type Game struct {
-	ID           GameID
-	AttemptsLeft byte
-	Guesses      []Guess
-	Status       Status
-}
+	// ID is the identified of a game.
+	ID GameID
 
-// A GameID represents the ID of a game.
-type GameID string
+	// The game of Gordle that is being played.
+	Gordle gordle.Game
+
+	// AttemptsLeft counts the number of attempts left before the game is over.
+	AttemptsLeft byte
+
+	// Guesses is the list of past guesses, and their feedback.
+	Guesses []Guess
+
+	// Status tells whether the game is playable.
+	Status Status
+}
 
 // Status is the current status of the game and tells what operations can be made on it.
 type Status string
@@ -27,6 +37,3 @@ type Guess struct {
 	Word     string
 	Feedback string
 }
-
-// ErrGameOver is returned when a play is made but the game is over.
-var ErrGameOver = errors.New("game over")

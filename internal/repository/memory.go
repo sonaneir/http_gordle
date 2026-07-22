@@ -2,12 +2,15 @@ package repository
 
 import (
 	"fmt"
-	"httpgordle/internal/session"
 	"log"
+	"sync"
+
+	"httpgordle/internal/session"
 )
 
 // GameRepository holds all the current games.
 type GameRepository struct {
+	mutex   sync.Mutex
 	storage map[session.GameID]session.Game
 }
 
@@ -20,6 +23,11 @@ func New() *GameRepository {
 
 // Add inserts for the first time a game in memory.
 func (gr *GameRepository) Add(game session.Game) error {
+	log.Printf("Adding a game...")
+
+	gr.mutex.Lock()
+	defer gr.mutex.Unlock()
+
 	_, ok := gr.storage[game.ID]
 	if ok {
 		return fmt.Errorf("gameID %s already exists", game.ID)

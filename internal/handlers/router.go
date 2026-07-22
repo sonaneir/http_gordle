@@ -1,28 +1,28 @@
 package handlers
 
 import (
+	"net/http"
+
 	"httpgordle/internal/api"
 	"httpgordle/internal/handlers/getstatus"
+	"httpgordle/internal/handlers/guess"
 	"httpgordle/internal/handlers/newgame"
-	"net/http"
+	"httpgordle/internal/repository"
 )
 
-// NewRouter returns a router that listens for requests
-// to the following endpoints:
+// NewRouter returns a router that listens for requests to the following endpoints:
 //   - Create a new game;
+//   - Get the status of a game;
+//   - Make a guess in a game.
 //
 // The provided router is ready to serve.
-func NewRouter() *http.ServeMux {
+func NewRouter(db *repository.GameRepository) *http.ServeMux {
 	r := http.NewServeMux()
-	r.HandleFunc(http.MethodPost+" "+api.NewGameRoutes, newgame.Handle)
-	r.HandleFunc(http.MethodGet+" "+api.GetStatusRoute, getstatus.Handle)
+
+	// Register each endpoint.
+	r.HandleFunc(http.MethodPost+" "+api.NewGameRoute, newgame.Handler(db))
+	r.HandleFunc(http.MethodGet+" "+api.GetStatusRoute, getstatus.Handler(db))
+	r.HandleFunc(http.MethodPut+" "+api.GuessRoute, guess.Handler(db))
 
 	return r
-}
-
-func Mux() *http.ServeMux {
-	mux := http.NewServeMux()
-	mux.HandleFunc(api.NewGameRoutes, newgame.Handle)
-
-	return mux
 }
